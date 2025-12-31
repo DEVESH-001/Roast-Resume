@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Script from "next/script";
 import { Geist, Geist_Mono, Figtree } from "next/font/google";
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/next"
+import { Analytics } from "@vercel/analytics/next";
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -16,15 +16,18 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://roast.devesh.work/";
+const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://roast.devesh.work";
+
+const normalizedSiteUrl = siteUrl.endsWith("/")
+  ? siteUrl.slice(0, -1)
+  : siteUrl;
 
 const siteTitle = "Roast My Resume – Savage AI Resume & GitHub Roast";
 const siteDescription =
   "Upload your resume and let an AI tech recruiter ruthlessly roast your experience, skills, GitHub, and LinkedIn in seconds.";
 
 export const metadata: Metadata = {
-  metadataBase: new URL(siteUrl),
+  metadataBase: new URL(normalizedSiteUrl),
   title: siteTitle,
   description: siteDescription,
   keywords: [
@@ -36,16 +39,16 @@ export const metadata: Metadata = {
     "developer resume critique",
   ],
   alternates: {
-    canonical: "https://roast.devesh.work/",
+    canonical: normalizedSiteUrl,
   },
   openGraph: {
     title: siteTitle,
     description: siteDescription,
-    url: "https://roast.devesh.work/",
+    url: normalizedSiteUrl,
     siteName: "Roast My Resume",
     images: [
       {
-        url: "/og.png",
+        url: `${normalizedSiteUrl}/og.png`,
         width: 1200,
         height: 630,
         alt: "Roast My Resume – AI-powered resume and GitHub roast",
@@ -58,7 +61,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteTitle,
     description: siteDescription,
-    images: ["/og.png"],
+    images: [`${normalizedSiteUrl}/og.png`],
     creator: "@devesh",
   },
   robots: {
@@ -83,14 +86,14 @@ export default function RootLayout({
     "@context": "https://schema.org",
     "@type": "WebApplication",
     name: "Roast My Resume",
-    url: siteUrl,
+    url: normalizedSiteUrl,
     description: siteDescription,
     applicationCategory: "BusinessApplication",
     operatingSystem: "Web",
     creator: {
       "@type": "Person",
       name: "Devesh",
-      url: "https://roast.devesh.work/",
+      url: normalizedSiteUrl,
     },
     offers: {
       "@type": "Offer",
