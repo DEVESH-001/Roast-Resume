@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     "GitHub roast",
     "LinkedIn roast",
     "AI career feedback",
-    "developer resume critique",
+    "Devesh Yadav",
   ],
   alternates: {
     canonical: normalizedSiteUrl,
@@ -46,6 +46,14 @@ export const metadata: Metadata = {
     description: siteDescription,
     url: normalizedSiteUrl,
     siteName: "Roast My Resume",
+    images: [
+      {
+        url: "/opengraph-image.png",
+        width: 2692,
+        height: 1470,
+        alt: "Roast My Resume – AI-powered resume and GitHub roast",
+      },
+    ],
     locale: "en_US",
     type: "website",
   },
@@ -53,6 +61,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteTitle,
     description: siteDescription,
+    images: ["/twitter-image.png"],
     creator: "@devesh",
   },
   robots: {
