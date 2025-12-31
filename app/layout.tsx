@@ -48,7 +48,7 @@ export const metadata: Metadata = {
     siteName: "Roast My Resume",
     images: [
       {
-        url: "/opengraph-image.png",
+        url: "/og.png",
         width: 2692,
         height: 1470,
         alt: "Roast My Resume – AI-powered resume and GitHub roast",
