@@ -17,7 +17,7 @@ const geistMono = Geist_Mono({
 });
 
 const siteUrl =
-  process.env.NEXT_PUBLIC_SITE_URL || "https://devesh.work/roast";
+  process.env.NEXT_PUBLIC_SITE_URL || "https://roast.devesh.work/";
 
 const siteTitle = "Roast My Resume – Savage AI Resume & GitHub Roast";
 const siteDescription =
@@ -36,12 +36,12 @@ export const metadata: Metadata = {
     "developer resume critique",
   ],
   alternates: {
-    canonical: "https://devesh.work/roast",
+    canonical: "https://roast.devesh.work/",
   },
   openGraph: {
     title: siteTitle,
     description: siteDescription,
-    url: "https://devesh.work/roast",
+    url: "https://roast.devesh.work/",
     siteName: "Roast My Resume",
     images: [
       {
@@ -90,7 +90,7 @@ export default function RootLayout({
     creator: {
       "@type": "Person",
       name: "Devesh",
-      url: "https://devesh.work",
+      url: "https://roast.devesh.work/",
     },
     offers: {
       "@type": "Offer",

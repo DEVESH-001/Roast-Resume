@@ -5,12 +5,14 @@ import { NextRequest, NextResponse } from "next/server";
 // @ts-expect-error - pdf-parse does not have types
 import pdf from "pdf-parse/lib/pdf-parse.js";
 
-const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024;
-const RATE_LIMIT_WINDOW_MS = 60_000;
-const RATE_LIMIT_MAX_REQUESTS = 15;
+// Constants for rate limiting
+const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
+const RATE_LIMIT_WINDOW_MS = 60_000; // 1 minute
+const RATE_LIMIT_MAX_REQUESTS = 15; // 15 requests per minute
 
 const requestCounts = new Map<string, { count: number; windowStart: number }>();
 
+// Function to get a unique identifier for the client (IP or user-agent) useful for rate limiting
 function getClientIdentifier(req: NextRequest): string {
   const forwardedFor = req.headers.get("x-forwarded-for");
   if (forwardedFor) {
@@ -20,6 +22,13 @@ function getClientIdentifier(req: NextRequest): string {
     }
   }
 
+  // Fallback to user-agent if IP is not available, used to identify unique clients
+  const userAgent = req.headers.get("user-agent");
+  if (userAgent) {
+    return userAgent;
+  }
+
+  // Fallback to real-ip if available
   const realIp = req.headers.get("x-real-ip");
   if (realIp) {
     return realIp;
@@ -28,6 +37,7 @@ function getClientIdentifier(req: NextRequest): string {
   return "unknown";
 }
 
+// Function to check if the client is rate limited, returns true if the client is rate limited
 function isRateLimited(identifier: string): boolean {
   const now = Date.now();
   const existing = requestCounts.get(identifier);
@@ -37,6 +47,7 @@ function isRateLimited(identifier: string): boolean {
     return false;
   }
 
+  // Check if the current request is within the rate limit window
   if (now - existing.windowStart > RATE_LIMIT_WINDOW_MS) {
     requestCounts.set(identifier, { count: 1, windowStart: now });
     return false;
@@ -45,12 +56,16 @@ function isRateLimited(identifier: string): boolean {
   existing.count += 1;
   requestCounts.set(identifier, existing);
 
+  // Check if the client has exceeded the rate limit
   return existing.count > RATE_LIMIT_MAX_REQUESTS;
 }
 
+// POST handler for the roast API endpoint, handles resume roasting requests
 export async function POST(req: NextRequest) {
   try {
+    // Get the unique identifier for the client (IP or user-agent)
     const clientIdentifier = getClientIdentifier(req);
+    // Check if the client is rate limited
     if (isRateLimited(clientIdentifier)) {
       return NextResponse.json(
         {
@@ -61,11 +76,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Parse form data, extract resume file, GitHub URL, and LinkedIn URL
     const formData = await req.formData();
     const file = formData.get("resume");
     const githubUrl = formData.get("githubUrl") as string;
     const linkedinUrl = formData.get("linkedinUrl") as string;
 
+    // Validate resume file
     if (!file || !(file instanceof File)) {
       return NextResponse.json(
         { error: "No resume file provided" },
@@ -73,6 +90,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Validate file size
     if (file.size > MAX_FILE_SIZE_BYTES) {
       return NextResponse.json(
         {
@@ -82,6 +100,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Validate file type
     if (file.type && file.type !== "application/pdf") {
       return NextResponse.json(
         {
@@ -91,6 +110,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Convert file to ArrayBuffer for pdf-parse, then to Buffer for pdf-parse
     const arrayBuffer = await file.arrayBuffer();
     const buffer = Buffer.from(arrayBuffer);
 
@@ -101,7 +121,7 @@ export async function POST(req: NextRequest) {
     // Fetch GitHub Data if URL is provided
     let githubData = "";
     if (githubUrl) {
-      // Extract username
+      // Extract username from GitHub URL, e.g., https://github.com/devesh-001
       const match = githubUrl.match(/github\.com\/([^\/]+)/);
       if (match && match[1]) {
         const username = match[1];

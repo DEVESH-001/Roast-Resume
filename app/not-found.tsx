@@ -21,7 +21,7 @@ export default function NotFound() {
             <Link href="/">Back to Roast My Resume</Link>
           </Button>
           <Button asChild variant="outline" className="w-full sm:w-auto">
-            <a href="https://devesh.work" target="_blank" rel="noreferrer">
+            <a href="https://roast.devesh.work/" target="_blank" rel="noreferrer">
               Visit Devesh&apos;s site
             </a>
           </Button>
