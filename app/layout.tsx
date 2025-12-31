@@ -48,9 +48,9 @@ export const metadata: Metadata = {
     siteName: "Roast My Resume",
     images: [
       {
-        url: `${normalizedSiteUrl}/og.png`,
-        width: 1200,
-        height: 630,
+        url: "/og.png",
+        width: 2692,
+        height: 1470,
         alt: "Roast My Resume – AI-powered resume and GitHub roast",
       },
     ],
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: siteTitle,
     description: siteDescription,
-    images: [`${normalizedSiteUrl}/og.png`],
+    images: ["/og.png"],
     creator: "@devesh",
   },
   robots: {
